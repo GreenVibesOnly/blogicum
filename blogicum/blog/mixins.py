@@ -1,5 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+<<<<<<< HEAD
 from django.shortcuts import redirect
+=======
+from django.shortcuts import get_object_or_404, redirect
+>>>>>>> 59b2c6e0fafbf0c7411679506c8713334c7c6bd0
 from django.urls import reverse
 from django.views import View
 
