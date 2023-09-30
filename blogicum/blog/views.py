@@ -123,11 +123,7 @@ class PostUpdateView(PostMixinView, UpdateView):
 class PostDeleteView(PostMixinView, DeleteView):
 
     def get_success_url(self):
-<<<<<<< HEAD
         return reverse('blog:profile', kwargs={'username': self.request.user})
-=======
-        return reverse('blog:profile', kwargs={'username':  self.request.user})
->>>>>>> 59b2c6e0fafbf0c7411679506c8713334c7c6bd0
 
 
 # Создание комментария
