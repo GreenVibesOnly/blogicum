@@ -1,5 +1,5 @@
-from datetime import datetime
 from django.db.models import Count
+from django.utils import timezone
 
 from .models import Post
 
@@ -15,7 +15,7 @@ def unfilter_posts():
 def filter_posts():
     '''Returns filtered post objects.'''
     return unfilter_posts().filter(
-        pub_date__lte=datetime.now(),
+        pub_date__lte=timezone.now(),
         is_published=True,
         category__is_published=True
     )

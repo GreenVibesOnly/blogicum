@@ -16,17 +16,19 @@ from .utils import filter_posts, unfilter_posts
 User = get_user_model()
 
 
-# Главная страница со всеми постами
 class IndexListView(ListView):
+    ''' Главная страница, все опубл. посты '''
     model = Post
     template_name = 'blog/index.html'
-    queryset = filter_posts()
     ordering = '-pub_date'
     paginate_by = 10
 
+    def get_queryset(self):
+        return filter_posts()
 
-# Страница категории
+
 class CategoryListView(IndexListView):
+    ''' Страница категории, посты категории '''
     template_name = 'blog/category.html'
     category = None
 
@@ -44,8 +46,8 @@ class CategoryListView(IndexListView):
         return context
 
 
-# Страница профиля и постов пользователя
 class ProfileListView(IndexListView):
+    ''' Страница профиля, посты пользователя '''
     template_name = 'blog/profile.html'
     author = None
 
@@ -61,8 +63,8 @@ class ProfileListView(IndexListView):
         return context
 
 
-# Редактирование профиля
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    ''' Редактирование профиля '''
     model = User
     form_class = UserForm
     template_name = 'blog/user.html'
@@ -75,8 +77,8 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('blog:profile', kwargs={'username': self.request.user})
 
 
-# Страница отдельного поста
 class PostDetailView(DetailView):
+    ''' Страница отдельного поста '''
     model = Post
     template_name = 'blog/detail.html'
     pk_url_kwarg = 'post_id'  # Добавляет pk к url
@@ -88,8 +90,8 @@ class PostDetailView(DetailView):
             return unfilter_posts().filter(id=self.kwargs['post_id'])
         return filter_posts().filter(id=self.kwargs['post_id'])
 
-    # Дополняет context
     def get_context_data(self, **kwargs):
+        ''' Дополняет context '''
         context = super().get_context_data(**kwargs)
         context['form'] = CommentForm()
         context['comments'] = (
@@ -100,8 +102,8 @@ class PostDetailView(DetailView):
         return context
 
 
-# Создание поста
 class PostCreateView(LoginRequiredMixin, CreateView):
+    ''' Создание поста '''
     model = Post
     form_class = PostForm
     template_name = 'blog/create.html'
@@ -114,20 +116,20 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return reverse('blog:profile', kwargs={'username': self.request.user})
 
 
-# Редактирование поста
 class PostUpdateView(PostMixinView, UpdateView):
+    ''' Редактирование поста '''
     form_class = PostForm
 
 
-# Удаление поста
 class PostDeleteView(PostMixinView, DeleteView):
+    ''' Удаление поста '''
 
     def get_success_url(self):
         return reverse('blog:profile', kwargs={'username': self.request.user})
 
 
-# Создание комментария
 class CommentCreateView(LoginRequiredMixin, CreateView):
+    ''' Создание комментария '''
     model = Comment
     form_class = CommentForm
     post_obj = None
@@ -154,11 +156,11 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         )
 
 
-# Редактирование комментария
 class CommentUpdateView(CommentMixinView, UpdateView):
+    ''' Редактирование комментария '''
     form_class = CommentForm
 
 
-# Удаление комментария
 class CommentDeleteView(CommentMixinView, DeleteView):
+    ''' Удаление комментария '''
     pass
